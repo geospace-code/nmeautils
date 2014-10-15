@@ -1,6 +1,7 @@
 nmea-util
 =========
 
-TODO: These utilities need to be modified to use Python 3.4 asyncio
-
 Utilities used for acquiring &amp; processing GPS data, especially NMEA
+
+``` nmealog.py ``` is a non-blocking multithreaded NMEA serial port reader 
+that I use with my Garmin GPS
