@@ -4,7 +4,8 @@
  even when GPS is giving data every second.
  Probably a bad example of using the serial port! consider Python asyncio
  Michael Hirsch
- GPL v3+ license
+http://blogs.bu.edu/mhirsch
+GPL v3+ license
 
 tested in Python 2.7 and 3.4 with PySerial 2.7
 
@@ -32,7 +33,7 @@ def nmeapoll(sport,logfn,period,verbose):
 
     #is the serial port open? if not, open it
     if not hs.isOpen():
-        print('opening port ' + sport)
+        print('opening port ' + hs.name)
         hs.open()
 
     #let's clear out any old junk
@@ -40,6 +41,7 @@ def nmeapoll(sport,logfn,period,verbose):
     hs.flushOutput()
 
     lastday = date.today()
+
 
     # this loops waits for enough bytes in the buffer before proceeding
     # this is a very old fashioned way to do this, and is not perfect!
@@ -62,9 +64,6 @@ def readbuf(hs,LastDay,logfn,nline,verbose):
     if (Today-LastDay).days > 0:
         LastDay = Today #rollover to the next day
 
-    if logfn is not None:
-        logfn = expanduser(splitext(logfn)[0]) + '-' + LastDay.strftime('%Y-%m-%d') + '.txt'
-
     txt = []
     # get latest NMEA ASCII from Garmin
     for i in range(nline):
@@ -78,6 +77,7 @@ def readbuf(hs,LastDay,logfn,nline,verbose):
         print(cgrp)
 
     if logfn is not None:
+        logfn = expanduser(splitext(logfn)[0]) + '-' + LastDay.strftime('%Y-%m-%d') + '.txt'
         with open(logfn,"a") as fid:
             fid.write(cgrp)
     elif not verbose:

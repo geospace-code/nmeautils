@@ -1,80 +1,100 @@
-# Jackson Labs Firefly-II and ULN-2550 GPS logger
-# that allows logging every N seconds,
-# even when GPS is giving data every second.
-# This is NOT an NMEA logger, it uses SCPI over serial port
-# Michael Hirsch
-# http://blogs.bu.edu/mhirsch
-# GPL v3+ license
+#!/usr/bin/env python3
+'''
+ Jackson Labs Firefly-II and ULN-2550 GPS logger
+ that allows logging every N seconds,
+ even when GPS is giving data every second.
+ This is NOT an NMEA logger, it uses SCPI over serial port
+ Michael Hirsch
+ http://blogs.bu.edu/mhirsch
+ GPL v3+ license
 
-import serial, time, io
-import signal,sys
-from datetime import datetime, date, timedelta
+ tested in Python 2.7 and 3.4 with PySerial 2.7
 
-def sigexit(signal, frame):
-        print('Exiting')
-        hs.close()
-        sys.exit(0)
+REQUIRES PySerial, obtained via
+ (linux)
+ pip install pyserial
+ or (windows with Anaconda)
+ conda install pyserial
+'''
+from serial import Serial
+from os.path import expanduser,splitext
+from time import sleep
+from signal import signal,SIGINT
+from datetime import datetime, date
 
-signal.signal(signal.SIGINT,sigexit)
+def nmeapoll(sport,logfn,period,verbose):
 
-if len(sys.argv)>1: sport=sys.argv[1]
-else: sport = '/dev/ttyS7'
+    # create a Serial object to manipulate the serial port
+    hs = Serial(sport,baud=19200,timeout=1,bytesize=8,
+                       parity='N',stopbits=1,xonxoff=0,rtscts=0)
 
-baud=19200
+    if not hs.isOpen():
+       print('opening port ' + hs.name)
+       hs.open()
 
-verbose = False
+    #let's clear out any old junk
+    hs.flushInput()
+    hs.flushOutput()
 
-logStem="../GPSlog/JacksonGPS"
-logExt=".txt"
+    hs.write("*IDN?\r\n")
+    txt=hs.readlines()[1].decode('utf-8')
+    print(txt)
 
-hs = serial.Serial(sport,baud,timeout=1,bytesize=8,
-                   parity='N',stopbits=1,xonxoff=0,rtscts=0)
+    LastDay = date.today()
+    print('starting read loop')
 
-if not hs.isOpen():
-   print(hs.name)
-   hs.open()
+    while True:
+        #check date
+        Today = date.today()
+        if (Today-LastDay).days > 0:
+            LastDay = Today
 
-hs.flushInput()
-hs.flushOutput()
 
-hs.write("*IDN?\r\n")
-idTxt=hs.readlines()[1].rstrip('\r\n')
-print(idTxt)
+        #get beginning of read time
+        now=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
+        # get jamming level
+        hs.write("GPS:JAM?\r\n")
+        jam=hs.readlines()[1].decode('utf-8') #[1].rstrip('\r\n')
+        # get number of visible sats per almanac
+        hs.write("GPS:SAT:VIS:COUN?\r\n")
+        nVis=hs.readlines()[1].decode('utf-8')
+        # get number of actually tracked satellites
+        hs.write("GPS:SAT:TRA:COUN?\r\n")
+        nTrk=hs.readlines()[1].decode('utf-8')
+        #time offset
+        hs.write("PTIME:TINT?\r\n")
+        tint=hs.readlines()[1].decode('utf-8')
+        #holdover duration
+        hs.write("SYNC:HOLD:DUR?\r\n")
+        hdur=hs.readlines()[1].decode('utf-8')
 
-LastDay = date.today()
-print('starting read loop')
+    	  #write results to disk
+        cln=[now,jam,nVis,nTrk,tint,hdur]
+        cln=' '.join(cln)+ '\n'
+        if verbose:
+            print(cln)
 
-while True:
-   #check date
-   Today = date.today()
-   if (Today-LastDay).days > 0:
-      LastDay = Today
-   logFN = logStem + '-' + LastDay.strftime('%Y-%m-%d') + logExt
-   #get beginning of read time
-   now=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
-   # get jamming level
-   hs.write("GPS:JAM?\r\n")
-   jam=hs.readlines()[1].rstrip('\r\n')
-   # get number of visible sats per almanac
-   hs.write("GPS:SAT:VIS:COUN?\r\n")
-   nVis=hs.readlines()[1].rstrip('\r\n')
-   # get number of actually tracked satellites
-   hs.write("GPS:SAT:TRA:COUN?\r\n")
-   nTrk=hs.readlines()[1].rstrip('\r\n')
-   #time offset
-   hs.write("PTIME:TINT?\r\n")
-   tint=hs.readlines()[1].rstrip('\r\n')
-   #holdover duration
-   hs.write("SYNC:HOLD:DUR?\r\n")
-   hdur=hs.readlines()[1].rstrip('\r\n')
+        if logfn is not None:
+            logfn = expanduser(splitext(logfn)[0]) + '-' + LastDay.strftime('%Y-%m-%d') + '.txt'
+            with open(logfn,"a") as fid:
+                fid.write(cln)
 
-	#write results to disk
-   cln=[now,jam,nVis,nTrk,tint,hdur]
-   cln=' '.join(cln)
-   if verbose:
-       print(cln)
-   cln+='\r\n' #for proper file writing
+        sleep(period)
 
-    with open(logFN,"a") as fl:
-        fl.write(cln)
-    time.sleep(5)
+def signal_handler(signal, frame):
+    print('\n *** Aborting program as per user pressed Ctrl+C ! \n')
+    exit(0)
+
+if __name__ == '__main__':
+    from argparse import ArgumentParser
+    signal(SIGINT, signal_handler) #allow Ctrl C to nicely abort program
+
+    p = ArgumentParser(description='Interacts with Jackson Labs GPS NMEA')
+    p.add_argument('-l','--log',help='specify log file to write GPS data to',type=str,default=None)
+    p.add_argument('-p','--port',help='specify serial port to listen on',type=str,default='/dev/ttyS0')
+    p.add_argument('-v','--verbose',help='print a lot of stuff to help debug',action='store_true')
+    p.add_argument('-T','--period',help='polling period (default 10 seconds)',type=float,default=10)
+    args = p.parse_args()
+
+    nmeapoll(args.port, args.log, args.period, args.verbose)
+
