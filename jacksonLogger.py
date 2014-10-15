@@ -1,5 +1,5 @@
-# Jackson Labs Firefly-II and ULN-2550 GPS logger 
-# that allows logging every N seconds, 
+# Jackson Labs Firefly-II and ULN-2550 GPS logger
+# that allows logging every N seconds,
 # even when GPS is giving data every second.
 # This is NOT an NMEA logger, it uses SCPI over serial port
 # Michael Hirsch
@@ -14,6 +14,7 @@ def sigexit(signal, frame):
         print('Exiting')
         hs.close()
         sys.exit(0)
+
 signal.signal(signal.SIGINT,sigexit)
 
 if len(sys.argv)>1: sport=sys.argv[1]
@@ -36,7 +37,7 @@ if not hs.isOpen():
 hs.flushInput()
 hs.flushOutput()
 
-hs.write("*IDN?\r\n") 
+hs.write("*IDN?\r\n")
 idTxt=hs.readlines()[1].rstrip('\r\n')
 print(idTxt)
 
@@ -44,7 +45,7 @@ LastDay = date.today()
 print('starting read loop')
 
 while True:
-   #check date 
+   #check date
    Today = date.today()
    if (Today-LastDay).days > 0:
       LastDay = Today
@@ -56,24 +57,24 @@ while True:
    jam=hs.readlines()[1].rstrip('\r\n')
    # get number of visible sats per almanac
    hs.write("GPS:SAT:VIS:COUN?\r\n")
-	nVis=hs.readlines()[1].rstrip('\r\n')
-	# get number of actually tracked satellites
-	hs.write("GPS:SAT:TRA:COUN?\r\n")
-	nTrk=hs.readlines()[1].rstrip('\r\n')
+   nVis=hs.readlines()[1].rstrip('\r\n')
+   # get number of actually tracked satellites
+   hs.write("GPS:SAT:TRA:COUN?\r\n")
+   nTrk=hs.readlines()[1].rstrip('\r\n')
    #time offset
    hs.write("PTIME:TINT?\r\n")
    tint=hs.readlines()[1].rstrip('\r\n')
- 	#holdover duration
-	hs.write("SYNC:HOLD:DUR?\r\n")	
-	hdur=hs.readlines()[1].rstrip('\r\n')
+   #holdover duration
+   hs.write("SYNC:HOLD:DUR?\r\n")
+   hdur=hs.readlines()[1].rstrip('\r\n')
 
 	#write results to disk
    cln=[now,jam,nVis,nTrk,tint,hdur]
    cln=' '.join(cln)
-	if verbose:
-	   print(cln)
-	cln+='\r\n' #for proper file writing
+   if verbose:
+       print(cln)
+   cln+='\r\n' #for proper file writing
 
-	with open(logFN,"a") as fl:
-	   fl.write(cln)
-	time.sleep(5)
+    with open(logFN,"a") as fl:
+        fl.write(cln)
+    time.sleep(5)
