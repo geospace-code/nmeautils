@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 '''
- Crude NMEA logger that allows logging every N seconds,
+ Multithreaded NMEA serial port logger that allows logging every N seconds,
  even when GPS is giving data every second.
- Probably a bad example of using the serial port! consider Python asyncio
  Michael Hirsch
 http://blogs.bu.edu/mhirsch
 GPL v3+ license
+
+An example of using non-blocking threading for serial port reading.
+Note: python will be switching back and forth, processing one thread at a time.
+This is just fine for thread(s) that sleep most of the time like here.
+For parallel processing that bypasses the GIL, consider the multiprocessing module
 
 tested in Python 2.7 and 3.4 with PySerial 2.7
 
@@ -15,11 +19,13 @@ REQUIRES PySerial, obtained via
  or (windows with Anaconda)
  conda install pyserial
 '''
+from threading import Thread,Event
 from serial import Serial
 from time import sleep
 from os.path import expanduser,splitext
 from signal import signal, SIGINT
 from datetime import date
+from datetime import datetime as dt
 from re import sub
 
 def nmeapoll(sport,logfn,period,verbose):
@@ -42,27 +48,43 @@ def nmeapoll(sport,logfn,period,verbose):
 
     lastday = date.today()
 
+    #start non-blocking read
+    stop = Event()
+    thread = Thread(target=portthread,
+                    args=(hs,lastday,logfn,nline,verbose,bytesWait,period,stop))
+    thread.start()
 
-    # this loops waits for enough bytes in the buffer before proceeding
-    # this is a very old fashioned way to do this, and is not perfect!
+    # we put this after the thread so it knows how to stop the thread
+    def signal_handler(*args):
+        stop.set()
+        print('\n *** Aborting program as per user pressed Ctrl+C ! \n')
+        exit(0)
+    signal(SIGINT,signal_handler)
+    #silly printing to show we're not blocking
     while True:
+        print('current time is ' + dt.utcnow().strftime('%H:%M:%S'))
+        sleep(1)
+
+def portthread(hs,lastday,logfn,nline,verbose,bytesWait,period,stop):
+    # this loops waits for enough bytes in the buffer before proceeding
+    while(not stop.is_set()):
         # now let next NMEA batch arrive
         inBufferByte = hs.inWaiting()
         if inBufferByte < bytesWait:
             if verbose:
                print(inBufferByte)
-            sleep(0.5) #wait some more for buffer to fill (0.5 seconds)
+            stop.wait(0.5) #wait some more for buffer to fill (0.5 seconds)
 
             #check date
         else: # we have enough bytes to read the buffer
-            lastday = readbuf(hs,lastday,logfn,nline,verbose)
-            sleep(period-2.5) #empirical
+            readbuf(hs,lastday,logfn,nline,verbose)
+            stop.wait(period-2.5) #empirical
             hs.flushInput()
 
-def readbuf(hs,LastDay,logfn,nline,verbose):
+def readbuf(hs,lastday,logfn,nline,verbose):
     Today = date.today()
-    if (Today-LastDay).days > 0:
-        LastDay = Today #rollover to the next day
+    if (Today-lastday).days > 0:
+        lastday = Today #rollover to the next day
 
     txt = []
     # get latest NMEA ASCII from Garmin
@@ -77,13 +99,12 @@ def readbuf(hs,LastDay,logfn,nline,verbose):
         print(cgrp)
 
     if logfn is not None:
-        logfn = expanduser(splitext(logfn)[0]) + '-' + LastDay.strftime('%Y-%m-%d') + '.txt'
+        logfn = expanduser(splitext(logfn)[0]) + '-' + lastday.strftime('%Y-%m-%d') + '.txt'
         with open(logfn,"a") as fid:
             fid.write(cgrp)
     elif not verbose:
         print(cgrp) #will print to screen if not already verbose
 
-    return LastDay
 
 def chksum_nmea(sentence):
     '''
@@ -112,19 +133,17 @@ def chksum_nmea(sentence):
         csum ^= ord(c)
 
     # Do we have a validated sentence?
-    if hex(csum) == hex(int(cksum, 16)):
-        return True
+    try:
+        if hex(csum) == hex(int(cksum, 16)):
+            return True
+    except ValueError: #some truncated lines really mess up
+        pass
 
     return False
 
 
-def signal_handler(signal, frame):
-    print('\n *** Aborting program as per user pressed Ctrl+C ! \n')
-    exit(0)
-
 if __name__ == '__main__':
     from argparse import ArgumentParser
-    signal(SIGINT, signal_handler) #allow Ctrl C to nicely abort program
 
     p = ArgumentParser(description='listens to Garmin NMEA')
     p.add_argument('-l','--log',help='specify log file to write GPS data to',type=str,default=None)
