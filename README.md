@@ -6,3 +6,6 @@ Utilities used for acquiring &amp; processing GPS data, especially NMEA
 
 ``` nmealog.py ``` is a non-blocking multithreaded NMEA serial port reader 
 that I use with my Garmin GPS
+
+Also checkout
+https://github.com/Knio/pynmea2
