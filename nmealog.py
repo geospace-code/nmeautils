@@ -28,13 +28,13 @@ from datetime import date
 from datetime import datetime as dt
 from re import sub
 
-def nmeapoll(sport,logfn,period,verbose):
+def nmeapoll(sport,logfn,period,baud,verbose):
 
     nline = 4
     bytesWait = 500 #wait to read till this many bytes are in buffer
 
     # create a Serial object to manipulate the serial port
-    hs = Serial(sport, baudrate=19200, timeout=1, bytesize=8,
+    hs = Serial(sport, baudrate=baud, timeout=1, bytesize=8,
                        parity='N', stopbits=1, xonxoff=0, rtscts=0)
 
     #is the serial port open? if not, open it
@@ -99,7 +99,8 @@ def readbuf(hs,lastday,logfn,nline,verbose):
         print(cgrp)
 
     if logfn is not None:
-        logfn = expanduser(splitext(logfn)[0]) + '-' + lastday.strftime('%Y-%m-%d') + '.txt'
+        stem,ext = expanduser(splitext(logfn))
+        logfn = '{}-{}{}'.format(stem,lastday.strftime('%Y-%m-%d'),ext)
         with open(logfn,"a") as fid:
             fid.write(cgrp)
     elif not verbose:
@@ -150,6 +151,7 @@ if __name__ == '__main__':
     p.add_argument('-p','--port',help='specify serial port to listen on',type=str,default='/dev/ttyS0')
     p.add_argument('-v','--verbose',help='print a lot of stuff to help debug',action='store_true')
     p.add_argument('-T','--period',help='polling period (default 10 seconds)',type=float,default=10)
-    args = p.parse_args()
+    p.add_argument('-b','--baud',help='baud rate (default 19200)',type=int,default=19200)
+    p = p.parse_args()
 
-    nmeapoll(args.port, args.log, args.period, args.verbose)
+    nmeapoll(p.port, p.log, p.period, p.baud, p.verbose)
