@@ -1,5 +1,5 @@
 [![Code Climate](https://codeclimate.com/github/scienceopen/nmeautils/badges/gpa.svg)](https://codeclimate.com/github/scienceopen/nmeautils)
-[![Health](https://landscape.io/github/scienceopen/nmea-util/master/landscape.png)](https://landscape.io/github/scienceopen/nmea-util/master)
+[![Health](https://landscape.io/github/scienceopen/nmeautils/master/landscape.png)](https://landscape.io/github/scienceopen/nmeautils/master)
 
 nmea-util
 =========
