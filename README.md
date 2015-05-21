@@ -21,11 +21,11 @@ conda install --file requirements.txt
 Example usage
 -------------
 ```
-python nmealog.py -l out.txt -p /dev/ttyUSB0 -T 1
+python3 nmealog.py -l out.txt -p /dev/ttyUSB0 -T 1
 ```
 
 ```
-pyton SCPIlogger.py -l out.txt -p /dev/ttyUSB0 -T 1
+python3 SCPIlogger.py -l out.txt -p /dev/ttyUSB0 -T 1
 ```
 
 
