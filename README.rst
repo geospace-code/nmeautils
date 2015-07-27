@@ -20,7 +20,7 @@ Installation
 ------------
 In Terminal, type::
 
-	git clone https://github.com/scienceopen/nmea-util
+	git clone --depth 1 https://github.com/scienceopen/nmeautils
 	conda install --file requirements.txt
 
 
