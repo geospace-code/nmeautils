@@ -5,16 +5,17 @@
  even when GPS is giving data every second.
  This is NOT an NMEA logger, it uses SCPI over serial port
  Michael Hirsch
- http://blogs.bu.edu/mhirsch
+ https://scivision.co
  GPL v3+ license
 
  tested in Python 2.7 and 3.4 with PySerial 2.7
+ 
+ Note: Jackson Labs default baud rate is 115200
 
 REQUIRES PySerial, obtained via
- (linux)
- pip install pyserial
- or (windows with Anaconda)
  conda install pyserial
+ or
+ pip install pyserial
 '''
 from serial import Serial
 from os.path import expanduser,splitext
