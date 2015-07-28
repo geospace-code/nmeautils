@@ -9,7 +9,7 @@
  GPL v3+ license
 
  tested in Python 2.7 and 3.4 with PySerial 2.7
- 
+
  Note: Jackson Labs default baud rate is 115200
 
 REQUIRES PySerial, obtained via
@@ -77,13 +77,19 @@ def nmeapoll(sport,logfn,period,verbose):
 
         if logfn is not None:
             logfn = expanduser(splitext(logfn)[0]) + '-' + LastDay.strftime('%Y-%m-%d') + '.txt'
-            with open(logfn,"a") as fid:
-                fid.write(cln)
+            with open(logfn,"a") as f:
+                f.write(cln)
 
         sleep(period)
 
+def parsestat(statint):
+    """ from page 18 sec. 3.3.5.1 of Fury 1.22 manual """
+    # same as matlab/octave de2bi(statint,16,2,'left-msb')
+    statbin = '{:016b}'.format(statint)
+    print(statbin)
+
 def signal_handler(signal, frame):
-    print('\n *** Aborting program as per user pressed Ctrl+C ! \n')
+    print('\n Aborting program as per user request! \n')
     exit(0)
 
 if __name__ == '__main__':
