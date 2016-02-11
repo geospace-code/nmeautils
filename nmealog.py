@@ -3,8 +3,7 @@
  Multithreaded NMEA serial port logger that allows logging every N seconds,
  even when GPS is giving data every second.
  Michael Hirsch
-http://blogs.bu.edu/mhirsch
-GPL v3+ license
+https://scivision.co
 
 An example of using non-blocking threading for serial port reading.
 Note: python will be switching back and forth, processing one thread at a time.
@@ -13,11 +12,7 @@ For parallel processing that bypasses the GIL, consider the multiprocessing modu
 
 tested in Python 2.7 and 3.4 with PySerial 2.7
 
-REQUIRES PySerial, obtained via
- (linux)
- pip install pyserial
- or (windows with Anaconda)
- conda install pyserial
+This could also be done with asyncio
 '''
 from threading import Thread,Event
 from serial import Serial
@@ -147,8 +142,8 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
 
     p = ArgumentParser(description='listens to Garmin NMEA')
-    p.add_argument('-l','--log',help='specify log file to write GPS data to',type=str,default=None)
-    p.add_argument('-p','--port',help='specify serial port to listen on',type=str,default='/dev/ttyS0')
+    p.add_argument('-l','--log',help='specify log file to write GPS data to')
+    p.add_argument('-p','--port',help='specify serial port to listen on',default='/dev/ttyS0')
     p.add_argument('-v','--verbose',help='print a lot of stuff to help debug',action='store_true')
     p.add_argument('-T','--period',help='polling period (default 10 seconds)',type=float,default=10)
     p.add_argument('-b','--baud',help='baud rate (default 19200)',type=int,default=19200)
