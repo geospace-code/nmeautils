@@ -10,16 +10,15 @@ nmeautils
 Python-based NMEA (ascii) reader, and a SCPI reader for Jackson Labs GPS
 
 ============== =========
-nmealog.py 	non-blocking multithreaded NMEA serial port reader (e.g. Garmin), selectable polling cadence.
+nmealog.py     non-blocking multithreaded NMEA serial port reader (e.g. Garmin), selectable polling cadence.
 SCPIlogger.py   Jackson Labs GPS receivers that use SCPI, it's not a raw NMEA output, but rather it's query based.
 ============== =========
 
 Installation
 ------------
-In Terminal, type::
+::
 
-	conda install --file requirements.txt
-
+    python setup.py develop
 
 Examples
 --------
