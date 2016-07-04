@@ -20,7 +20,6 @@ from os.path import expanduser,splitext
 from signal import signal, SIGINT
 from datetime import date
 from datetime import datetime as dt
-from re import sub
 #
 from nmeautils.nmea import chksum_nmea
 

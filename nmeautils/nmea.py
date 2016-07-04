@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+from re import sub
+
 def chksum_nmea(sentence):
     '''
     from http://doschman.blogspot.com/2013/01/calculating-nmea-sentence-checksums.html
