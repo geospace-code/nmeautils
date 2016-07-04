@@ -1,0 +1,22 @@
+language: python
+
+notification:
+    emsil: false
+
+git:
+    depth: 3
+
+os:
+    - linux
+    - osx
+
+python:
+    - 2.7
+    - 3.5
+
+install:
+    - pip install -q coverage
+    - python setup.py develop
+
+script:
+    - coverage run tests/test.py -v
