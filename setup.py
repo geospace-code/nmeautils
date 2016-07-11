@@ -3,7 +3,7 @@ from setuptools import setup
 import subprocess
 
 try:
-    subprocess.call(['conda','install','--yes','--file','requirements.txt'])
+    subprocess.call(['conda','install','--file','requirements.txt'])
 except (Exception,KeyboardInterrupt) as e:
     pass
 
