@@ -1,7 +1,7 @@
 language: generic
 
-notification:
-    emsil: false
+notifications:
+    email: false
 
 git:
     depth: 3
@@ -38,6 +38,6 @@ install:
     - pip -q install coveralls
     - python setup.py develop
 
-script: coverage run tests/test.py -v
+script: coverage run tests/test.py
 
 after_success: coveralls

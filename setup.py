@@ -4,7 +4,7 @@ import subprocess
 
 try:
     subprocess.call(['conda','install','--file','requirements.txt'])
-except (Exception,KeyboardInterrupt) as e:
+except Exception as e:
     pass
 
 
