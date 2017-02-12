@@ -18,17 +18,17 @@ Installation
 ------------
 ::
 
-    python setup.py develop
+    pip install .
 
 Examples
 --------
 For a Garmin GPS or other GPS with NMEA output::
 
-    python3 nmealog.py -l out.txt -p /dev/ttyUSB0 -T 1
+    python nmealog.py -l out.txt -p /dev/ttyUSB0 -T 1
 
 For a Jackson Labs SCPI-based GPS::
 
-    python3 SCPIlogger.py -l out.txt -p /dev/ttyUSB0 -T 1
+    python SCPIlogger.py -l out.txt -p /dev/ttyUSB0 -T 1
 
 
 
