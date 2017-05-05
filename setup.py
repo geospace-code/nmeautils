@@ -1,13 +1,28 @@
 #!/usr/bin/env python
-from setuptools import setup
-
 req = ['pyserial']
+# %%
+import pip
+try:
+    import conda.cli
+    conda.cli.main('install',*req)
+except Exception as e:
+    pip.main(['install'] +req)
+# %%
+from setuptools import setup
 
 setup(name='nmeautils',
       packages=['nmeautils'],
-	  description='read NMEA with Python',
+      version='1.0',
+	  description='read/parse NMEA with Python',
 	  author='Michael Hirsch, Ph.D.',
 	  url='https://github.com/scivision/nmeautils',
-      install_requires=req,
+      classifiers=[
+          'Intended Audience :: Science/Research',
+          'Development Status :: 5 - Production/Stable',
+          'License :: OSI Approved :: MIT License',
+          'Topic :: Scientific/Engineering',
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 3',
+          ],
 	  )
 

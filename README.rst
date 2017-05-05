@@ -1,8 +1,4 @@
-.. image:: https://codeclimate.com/github/scienceopen/nmeautils/badges/gpa.svg
-   :target: https://codeclimate.com/github/scienceopen/nmeautils
-   :alt: Code Climate
 
-   
 =========   
 nmeautils
 =========
@@ -18,7 +14,7 @@ Installation
 ------------
 ::
 
-    pip install .
+    python setup.py develop
 
 Examples
 --------
@@ -30,10 +26,6 @@ For a Jackson Labs SCPI-based GPS::
 
     python SCPIlogger.py -l out.txt -p /dev/ttyUSB0 -T 1
 
-
-
-
-Another project to consider:  https://github.com/Knio/pynmea2
 
 Jackson Labs GPS SCPI commands
 ------------------------------
@@ -50,3 +42,8 @@ SYNC:HOLD:DUR?      Holdover duration
 GPS:JAM?            Estimated jamming level
 PTIME:TINT?         Time offset
 =================  ========
+
+Reference
+---------
+
+Another project to consider:  https://github.com/Knio/pynmea2

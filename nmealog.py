@@ -16,12 +16,11 @@ This could also be done with asyncio
 from threading import Thread,Event
 from serial import Serial
 from time import sleep
-from os.path import expanduser,splitext
 from signal import signal, SIGINT
 from datetime import date
 from datetime import datetime as dt
 #
-from nmeautils.nmea import chksum_nmea
+from nmeautils import chksum_nmea
 
 def nmeapoll(sport,logfn,period,baud,verbose):
 

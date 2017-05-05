@@ -9,8 +9,9 @@ https://scivision.co
 
 Note: Jackson Labs default baud rate is 115200
 '''
+from sys import exit
 from serial import Serial
-from os.path import expanduser,splitext
+from pathlib import Path
 from time import sleep
 from signal import signal,SIGINT
 from datetime import datetime, date
@@ -23,7 +24,8 @@ def nmeapoll(sport,logstem,period,verbose):
         S = Simport()
     else:
         # create a Serial object to manipulate the serial port
-        S = Serial(sport,baudrate=19200,timeout=1,bytesize=8,parity='N',stopbits=1,xonxoff=0,rtscts=0)
+        S = Serial(sport,baudrate=19200,timeout=1,bytesize=8,
+                   parity='N',stopbits=1,xonxoff=0,rtscts=0)
 
     if S.isOpen():
        S.close()
@@ -72,8 +74,8 @@ def nmeapoll(sport,logstem,period,verbose):
             print(cln)
 
         if logstem is not None:
-            logfn = expanduser(logstem) + '-' + LastDay.strftime('%Y-%m-%d') + '.txt'
-            with open(logfn,"a") as f:
+            logfn = Path(logstem).expanduser() +'-' + LastDay.strftime('%Y-%m-%d') + '.txt'
+            with logfn.open("a") as f:
                 f.write(cln)
 
         sleep(period)
@@ -86,7 +88,7 @@ def parsestat(statint):
 
 def signal_handler(signal, frame):
     print('\n Aborting program as per user request! \n')
-    raise SystemExit()
+    exit()
 
 
 if __name__ == '__main__':
