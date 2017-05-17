@@ -18,10 +18,12 @@ def nmeapoll(port,baud,sentence):
     
     sentence = sentence.upper()
     
-    if isinstance(port,str):  # normal
+    if isinstance(port,str) and port != 'sim':  # normal
         with serial.Serial(port, baud, 8, 'N', 1) as S:
             gstr = nmeagrab(S,port,sentence)
     else: # self test
+        if port == 'sim':
+            port = Simport( '$GPRMC,225446,A,4916.45,N,12311.12,W,000.5,054.7,191104,020.3,E*61')
         gstr = nmeagrab(port,None,sentence)
 
     nmea = nmeaparser(gstr,sentence)

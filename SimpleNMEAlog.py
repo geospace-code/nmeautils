@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 from sys import stderr
+from pprint import pprint
 
 from nmeautils import nmeapoll
 
@@ -14,6 +15,6 @@ if __name__ == '__main__':
 
     dat = nmeapoll(p.port,p.baud,p.sentence)
     if dat is not None:
-        print(dat)
+        pprint(dat)
     else:
         print('no GPS fix',file=stderr)
