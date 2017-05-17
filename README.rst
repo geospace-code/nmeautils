@@ -1,3 +1,5 @@
+.. image:: https://travis-ci.org/scivision/nmeautils.svg?branch=master
+    :target: https://travis-ci.org/scivision/nmeautils
 
 =========   
 nmeautils

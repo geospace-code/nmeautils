@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-req = ['pyserial']
+req = ['pyserial','nose','numpy']
 # %%
 import pip
 try:
