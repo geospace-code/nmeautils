@@ -21,7 +21,6 @@ setup(name='nmeautils',
           'Development Status :: 5 - Production/Stable',
           'License :: OSI Approved :: MIT License',
           'Topic :: Scientific/Engineering',
-          'Programming Language :: Python',
           'Programming Language :: Python :: 3',
           ],
 	  )
