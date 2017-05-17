@@ -18,7 +18,7 @@ def nmeapoll(port,baud,sentence):
     
     sentence = sentence.upper()
     
-    if isinstance(port,int):  # normal
+    if isinstance(port,str):  # normal
         with serial.Serial(port, baud, 8, 'N', 1) as S:
             gstr = nmeagrab(S,port,sentence)
     else: # self test
