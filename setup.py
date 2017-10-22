@@ -23,5 +23,6 @@ setup(name='nmeautils',
           'Topic :: Scientific/Engineering',
           'Programming Language :: Python :: 3',
           ],
+      install_requires=req,
 	  )
 
