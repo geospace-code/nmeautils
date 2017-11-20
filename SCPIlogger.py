@@ -9,7 +9,6 @@ https://scivision.co
 
 Note: Jackson Labs default baud rate is 115200
 '''
-from sys import exit
 from serial import Serial
 from pathlib import Path
 from time import sleep
@@ -83,12 +82,12 @@ def nmeapoll(sport,logstem,period,verbose):
 def parsestat(statint):
     """ from page 18 sec. 3.3.5.1 of Fury 1.22 manual """
     # same as matlab/octave de2bi(statint,16,2,'left-msb')
-    statbin = '{:016b}'.format(statint)
+    statbin = f'{statint:016b}'
     print(statbin)
 
 def signal_handler(signal, frame):
     print('\n Aborting program as per user request! \n')
-    exit()
+    raise SystemExit()
 
 
 if __name__ == '__main__':

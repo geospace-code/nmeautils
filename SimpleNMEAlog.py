@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-from __future__ import print_function
-from sys import stderr
+import logging
 from pprint import pprint
 
 from nmeautils import nmeapoll
@@ -17,4 +16,4 @@ if __name__ == '__main__':
     if dat is not None:
         pprint(dat)
     else:
-        print('no GPS fix',file=stderr)
+        logging.error('no GPS fix')
