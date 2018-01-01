@@ -49,7 +49,7 @@ def nmeapoll(sport,logstem,period,verbose):
             LastDay = Today
 
         #get beginning of read time
-        now=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
+        now=datetime.utcnow().isoformat(timespec='seconds')
         # get jamming level
         S.write("GPS:JAM?\r\n")
         jam = S.readlines()[1].decode('utf-8') #[1].rstrip('\r\n')

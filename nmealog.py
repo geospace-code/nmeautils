@@ -98,7 +98,7 @@ def readbuf(S,lastday,logstem,nline,verbose):
         print(cgrp)
 
     if logstem is not None:
-        logfn = f'{logstem}-{lastday.strftime('%Y-%m-%d')}.log'
+        logfn = f'{logstem}-{lastday.strftime("%Y-%m-%d")}.log'
         with open(logfn,"a") as f:
             f.write(cgrp)
     elif not verbose:
