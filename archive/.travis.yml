@@ -6,10 +6,9 @@ git:
   quiet: true
 
 
-install: pip install -e .[tests]
+install: pip install -e .[tests,lint]
 
 script:
 - flake8
 - mypy .
-- pytest -r a -v
-
+- pytest
