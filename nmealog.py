@@ -2,14 +2,11 @@
 """
  Multithreaded NMEA serial port logger that allows logging every N seconds,
  even when GPS is giving data every second.
- Michael Hirsch
 
 An example of using non-blocking threading for serial port reading.
 Note: python will be switching back and forth, processing one thread at a time.
 This is just fine for thread(s) that sleep most of the time like here.
 For parallel processing that bypasses the GIL, consider the multiprocessing module
-
-tested in Python 2.7 and 3 with PySerial 2.7
 
 This could also be done with asyncio
 """
