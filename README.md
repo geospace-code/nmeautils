@@ -1,6 +1,6 @@
-[![image](https://travis-ci.org/scivision/nmeautils.svg?branch=master)](https://travis-ci.org/scivision/nmeautils)
-
 # NMEA utilities
+
+[![image](https://travis-ci.org/geospace-code/nmeautils.svg?branch=master)](https://travis-ci.org/geospace-code/nmeautils)
 
 Python-based NMEA (ascii) reader, and a SCPI reader for Jackson Labs GPS
 
@@ -9,7 +9,9 @@ Python-based NMEA (ascii) reader, and a SCPI reader for Jackson Labs GPS
 
 ## Installation
 
-    pip install -e .
+```sh
+pip install -e .
+```
 
 ## Examples
 
@@ -32,7 +34,7 @@ Jackson Labs GPS receiver. Note the default baudrate is 115200, NO
 hardware / software flow control, 8-N-1.
 
  SCPI | result
-======|=============================+===================================+
+------|--------
 `\*IDN?` | identify receiver (model #, firmware revision
 `GPS:SAT:VIS:COUN?` | How many GPS satellites are visible per the almanac, above the 0 degree horizon
 `GPS:SAT:TRA:COUN?` | How many GPS satellites are actually being received
@@ -42,4 +44,4 @@ hardware / software flow control, 8-N-1.
 
 ## Reference
 
-Another project to consider: <https://github.com/Knio/pynmea2>
+Another project to consider: [pynmea2](https://github.com/Knio/pynmea2)
