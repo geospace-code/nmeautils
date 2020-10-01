@@ -11,7 +11,7 @@ def nmeapoll(port: str, baud: int, sentence: str) -> typing.Dict[str, typing.Any
     grab vital GPS data, return dict of parsed data
 
     inspired by work from Zachary Chapasko
-    Michael hirsch, Ph.D.
+    Michael Hirsch
 
     example for GPS receiver at 4800 baud on COM1, selecting GPGGA
 
@@ -41,6 +41,7 @@ def nmeagrab(S, port: str, sentence: str) -> str:
     # prepare two strings for message parsing
     gpsb = b""
     pat = b"$" + bytes(sentence, "ascii")
+    gpsstr = ""
 
     while not gpsb:
         bwait = S.inWaiting()

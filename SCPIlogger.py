@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Jackson Labs Firefly-II and ULN-2550 GPS logger
 that allows logging every N seconds,

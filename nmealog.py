@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
  Multithreaded NMEA serial port logger that allows logging every N seconds,
  even when GPS is giving data every second.

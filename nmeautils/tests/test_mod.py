@@ -1,6 +1,4 @@
-#!/usr/bin/env python
 from datetime import datetime
-import pytest
 from pytest import approx
 
 from nmeautils.nmea import chksum_nmea, nmeapoll
@@ -20,7 +18,3 @@ def test_simpleparser():
     assert dat["t"] == datetime(2004, 11, 19, 22, 54, 46)
     assert dat["lat"] == approx(49.2666666666)
     assert dat["lon"] == approx(-123.1833333333)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__])

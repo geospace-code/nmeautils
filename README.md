@@ -1,6 +1,6 @@
 # NMEA utilities
 
-![ci](https://github.com/geospace-code/nmeautils/workflows/ci_python/badge.svg)
+![ci](https://github.com/geospace-code/nmeautils/workflows/ci/badge.svg)
 
 Python-based NMEA (ascii) reader, and a SCPI reader for Jackson Labs GPS
 
